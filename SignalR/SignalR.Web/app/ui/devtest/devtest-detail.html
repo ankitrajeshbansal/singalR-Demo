@@ -1,0 +1,56 @@
+﻿<div class="modal-dialog" >
+    <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <h4 class="modal-title" id="myModalLabel">DevTest form</h4>
+        </div>
+        <form role="form" id="devtestForm" name="devtestForm" novalidate>
+            <div class="modal-body">
+
+                <input type="hidden" ng-model="vm.devtest.Id" />
+                <div class="form-group">
+                    <label>Campaign Name</label>
+                    <input class="form-control" ng-model="vm.devtest.CampaignName" type="text" name="Name" required maxlength="255">
+                    <p class="help-block has-error" ng-show="devtestForm.CampaignName.$invalid && !devtestForm.CampaignName.$pristine">Please enter name</p>
+                </div>
+                <div class="form-group">
+                    <label>Date</label>
+                    <input class="form-control" ng-model="vm.devtest.Date" id="Date" name="Date" readonly placeholder="select date">
+                </div>
+
+                <div class="form-group">
+                    <label>Clicks</label>
+                    <input class="form-control" rows="3" ng-model="vm.devtest.Clicks" type="number" min="0">
+                </div>
+                <div class="form-group">
+                    <label>Conversions</label>
+                    <input class="form-control" ng-model="vm.devtest.Conversions" name="Conversions" type="number" min="0">
+                  </div>
+                <div class="form-group">
+                    <label>Impressions</label>
+                    <input class="form-control" ng-model="vm.devtest.Impressions" name="Impressions" type="number" min="0">
+                </div>
+                <div class="form-group">
+                    <label>AffiliateName</label>
+                    <input class="form-control" ng-model="vm.devtest.AffiliateName" name="AffiliateName" type="text" maxlength="255">
+                </div>
+                
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <button type="submit" class="btn btn-primary" ng-disabled="devtestForm.$invalid || devtestForm.$pristine" ng-click="vm.submit(devtestForm)">Save changes</button>
+                <!---->
+            </div>
+        </form>
+    </div>
+    <!-- /.modal-content -->
+</div>
+
+<script>
+    $(document).ready(function () {
+        // add jquery ui date picker the date format
+        $("#Date").datepicker({
+            dateFormat: "mm/dd/yy"
+        });
+    });
+</script>

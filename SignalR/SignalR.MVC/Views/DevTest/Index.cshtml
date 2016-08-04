@@ -1,0 +1,97 @@
+﻿@model IEnumerable<SignalR.MVC.Models.DevTest>
+@{
+    ViewBag.Title = "Index";
+}
+
+@using (Ajax.BeginForm(null, null,
+                                                            new AjaxOptions
+                                                            {
+                                                                HttpMethod = FormMethod.Get.ToString(),
+                                                                InsertionMode = InsertionMode.Replace,
+                                                                UpdateTargetId = "content_list",
+                                                                Url = Url.Action("List", "DevTest"),
+                                                                OnComplete = "partialViewRefresh"
+                                                            }, new { id = "form" }))
+
+{
+    <!--partial view list-->
+    <div id="content_list">
+        @Html.Partial("_List", Model)
+    </div>
+}
+
+<!--Modal popup div for Add/Edit records-->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div id="content_detail">
+    </div>
+</div>
+
+@section Script{
+    <script>
+    //define object of SignalR
+     var signalrHub = $.connection.signalRHub;
+
+    $(document).ready(function () {        
+        signalrHub.client.refreshList = function (isRefreshed) {
+            $('#form').submit();
+        };
+
+        //Start SignalR Hub
+        $.connection.hub.start();
+    });
+
+
+    function partialViewRefresh()
+    {
+
+    }
+
+    function partialViewDetail(response)
+    {
+        if (response) {
+            signalrHub.server.send(true);
+            bootbox.alert('Data save successfully!');
+            $('#myModal .close').click();
+        }
+    }
+    function openPopup(_id)
+    {
+        $.ajax({
+            url: '@Url.Action("Detail", "DevTest")',
+            type: 'Get',
+            data: { id: _id },
+            datatype: "json",
+            success: function (data) {
+                $('#content_detail').empty();
+                $('#content_detail').append(data);
+            },
+            error: function (err)
+            { }
+        });
+    }
+
+    function deleteR(_id)
+    {
+        bootbox.confirm('do you confirm to delete this record?', function (result) {
+            if (result) {
+                $.ajax({
+                    url: '@Url.Action("Delete", "DevTest")',
+                    type: 'Post',
+                    data: { id: _id },
+                    datatype: "json",
+                    success: function (data) {
+                        if (data == true)
+                        {
+                            signalrHub.server.send(true);
+                            bootbox.alert('Data deleted successfully!');                                                    
+                        }
+                    },
+                    error: function (err)
+                    { }
+                });
+            }
+        });
+    }
+    
+    </script>
+}
